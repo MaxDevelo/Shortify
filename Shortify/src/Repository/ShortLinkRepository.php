@@ -15,6 +15,36 @@ class ShortLinkRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ShortLink::class);
     }
+    
+    /**
+     * @param  ShortLink $shortLink
+     * @param  bool $flush
+     * @return void
+     */
+    public function save(ShortLink $shortLink, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($shortLink);
+
+        if ($flush)
+        {
+            $this->getEntityManager()->flush();
+        }
+    }
+    
+    /**
+     * @param  mixed $shortLink
+     * @param  mixed $flush
+     * @return void
+     */
+    public function remove(ShortLink $shortLink, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($shortLink);
+
+        if ($flush)
+        {
+            $this->getEntityManager()->flush();
+        }
+    }
 
     //    /**
     //     * @return ShortLink[] Returns an array of ShortLink objects
