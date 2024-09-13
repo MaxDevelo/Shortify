@@ -45,6 +45,19 @@ class ShortLinkRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    
+    /**
+     * @param  string $shortLink
+     * @return ShortLink
+     */
+    public function verifyShortLinkExists(string $shortLink): ?ShortLink
+    {
+        return $this->createQueryBuilder("sl")
+        ->where("sl.short_link = :short_link")
+        ->setParameter("short_link", $shortLink)
+        ->getQuery()
+        ->getOneOrNullResult();
+    }
 
     //    /**
     //     * @return ShortLink[] Returns an array of ShortLink objects

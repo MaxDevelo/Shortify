@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Api\ShortLinkGeneratorInterface;
 use App\Form\ShortLinkType;
 use App\Repository\ShortLinkRepository;
 use Psr\Log\LoggerInterface;
@@ -24,7 +23,6 @@ class ShortLinkController extends AbstractController
     public function __construct(
         protected LoggerInterface $logger,
         protected ShortLinkRepository $shortLinkRepository,
-        protected ShortLinkGeneratorInterface $shortLinkGeneratorInterface
     ) { }
 
     #[Route('/short/link', name: 'app_short_link')]
@@ -36,11 +34,12 @@ class ShortLinkController extends AbstractController
 
         if ($formShortLink->isSubmitted() && $formShortLink->isValid()) {
             $this->logger->info('Your form submitted !');
+            
             $data = $formShortLink->getData();
+            
+            $this->shortLinkRepository->save($data, true);
 
-            $shortLink = $this->shortLinkGeneratorInterface->generate();
-
-            dd($shortLink);
+            return $this->redirectToRoute('app_short_link');
         }
 
         return $this->render('short_link/index.html.twig', [
