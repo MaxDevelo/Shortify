@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Redirect!{% endblock %}
+{% block title %}{{ app.request.uri }}{% endblock %}
 
 {% block body %}
 
