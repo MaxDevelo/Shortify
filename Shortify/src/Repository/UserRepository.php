@@ -59,7 +59,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
     }
 
-    public function verifyEmailExists(string $email): User
+    public function verifyEmailExists(string $email): ?User
     {
         return $this->createQueryBuilder('u')
         ->where('u.email = :email')
