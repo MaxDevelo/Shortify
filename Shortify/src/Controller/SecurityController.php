@@ -28,7 +28,11 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
 
-            $this->userRepository->save($user, true);
+            try {
+                $this->userRepository->save($user, true);
+            } catch (\Exception $e) {
+                $this->addFlash("error", $e->getMessage());
+            }
         }
     
 

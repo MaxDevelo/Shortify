@@ -35,6 +35,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function save(User $user, bool $flush = false): void
     {
+        if ($this->verifyEmailExists($user->getEmail())) {
+            throw new UnsupportedUserException("Your Email already used : " . $user->getEmail());
+        }
+
         $this->getEntityManager()->persist($user);
 
         if($flush)
@@ -51,6 +55,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function verifyEmailExists(string $email): User
+    {
+        return $this->createQueryBuilder('u')
+        ->where('u.email = :email')
+        ->setParameter('email', $email)
+        ->getQuery()
+        ->getOneOrNullResult();
     }
 
     //    /**

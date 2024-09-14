@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {% for error in app.session.flashbag.get('error') %}
+        {{ error }}
+    {% endfor %}
     {{ form(form_register) }}
 {% endblock %}
