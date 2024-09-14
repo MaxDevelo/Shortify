@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ app.request.uri }}{% endblock %}
+
+{% block body %}
+
+<div class="text-center py-4">
+    <h1>Please wait <span id="countdown" class="font-bold">10</span> seconds before viewing the link</h1>
+    <a id="url-button" target="_blank" type="button" class="hidden text-gray-900 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:outline-none focus:ring-[#F7BE38]/50 font-medium text-sm px-10 py-2.5 text-center items-center dark:focus:ring-[#F7BE38]/50 mb-2">
+        ACCESS THE LINK
+    </a>
+</div>
+
+{# TODO: Move to JS file and use Jquery or AplineJS #}
+<script>
+    const countdownElement = document.getElementById('countdown');
+    const urlButton = document.getElementById('url-button');
+
+    let countdown = 10;
+
+    let timer = setInterval(function() {
+        countdown--;
+        countdownElement.textContent = countdown;
+        if (countdown === 0) {
+            clearInterval(timer);
+            urlButton.style.display = 'block';
+            urlButton.setAttribute('href', "{{ url }}");
+        }
+    }, 1000);
+</script>
+
+{% endblock %}
