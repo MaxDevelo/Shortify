@@ -39,13 +39,25 @@ class RegisterType extends AbstractType
                 'second_options' => ['label' => 'Repeat Password'],
             ])
             ->add('save', SubmitType::class, ['label' => 'Create Your Account'])
-            ->addEventListener(FormEvents::SUBMIT, [$this, 'onSubmit']);
+            ->addEventListener(FormEvents::POST_SUBMIT, [$this, 'onSubmit']);
         ;
     }
 
     public function onSubmit(FormEvent $event): void
     {
+        $form = $event->getForm();
         $user = $event->getData();
+        
+        if (!$form->isValid())
+        {
+            return;
+        }
+
+        if (!$user->getPassword())
+        {
+            return;
+        }
+
         $user->setPassword(
             $this->userPasswordHasherInterface->hashPassword($user, $user->getPassword())
         );
