@@ -8,6 +8,7 @@ use App\Form\ShortLinkType;
 use App\Repository\ShortLinkRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,11 +24,17 @@ class ShortLinkGeneratorController extends AbstractController
     public function __construct(
         protected LoggerInterface $logger,
         protected ShortLinkRepository $shortLinkRepository,
+        protected Security $security,
     ) { }
 
     #[Route('/short/link', name: 'app_short_link')]
     public function index(Request $request): Response
     {
+        if(!$this->security->getUser())
+        {
+            return $this->redirectToRoute('app_login');
+        }
+
         $formShortLink = $this->createForm(ShortLinkType::class);
 
         $formShortLink->handleRequest($request);
