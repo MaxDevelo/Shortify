@@ -23,6 +23,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
     use TargetPathTrait;
 
     public const LOGIN_ROUTE = 'app_login';
+    public const FAST_LOGIN_ROUTE = 'app_fast_login'; 
 
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
@@ -50,12 +51,16 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }
 
     protected function getLoginUrl(Request $request): string
     {
+        $route = $request->attributes->get('_route');
+        if ($route === self::FAST_LOGIN_ROUTE) {
+            return $this->urlGenerator->generate(self::FAST_LOGIN_ROUTE);
+        }
+
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
 }

@@ -22,6 +22,11 @@ services:
     App\Form\Auth\RegisterType:
         arguments:
             $userPasswordHasherInterface: '@security.password_hasher'
+    App\Twig\AuthenticationExtension:
+        arguments:
+            $authenticationUtils: '@security.authentication_utils'
+        tags: ['twig.extension']
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

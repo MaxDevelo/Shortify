@@ -16,6 +16,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SecurityController extends AbstractController
 {
+    public const TEMPLATE_REGISTER = 'security/register.html.twig';
+    public const TEMPLATE_FAST_LOGIN = 'security/fast_login.html.twig';
+    public const TEMPLATE_LOGIN = 'security/login.html.twig';
+
     public function __construct(
         private UserRepository $userRepository,
         private Security $security,
@@ -40,7 +44,7 @@ class SecurityController extends AbstractController
         }
     
 
-        return $this->render("security/register.html.twig",
+        return $this->render(self::TEMPLATE_REGISTER,
         [
             "form_register"=> $form,
         ]
@@ -48,17 +52,16 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/login/index', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    #[Route(path: '/fast-login/index', name: 'app_fast_login')]
+    public function login(Request $request, AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        $routeName = $request->attributes->get('_route');
 
-        // get the login error if there is one
+        $template = $routeName === 'app_fast_login' ? self::TEMPLATE_FAST_LOGIN : self::TEMPLATE_LOGIN;
+
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render($template, ['last_username' => $lastUsername, 'error' => $error]);
     }
 
     #[Route(path: '/logout/index', name: 'app_logout')]

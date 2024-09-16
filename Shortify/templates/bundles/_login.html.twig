@@ -1,0 +1,14 @@
+{% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+	<div class="mr-20">
+		<form method="post" action="{{ path('app_fast_login') }}" class="flex gap-1">
+			<label for="inputEmail">Email</label>
+			<input type="email" value="{{ get_last_username() }}" name="email" id="inputEmail" class="border border-gray-300 rounded p-1 text-sm w-48 h-7" autocomplete="email" required autofocus>
+			<label for="inputPassword">Password</label>
+			<input type="password" name="password" id="inputPassword" class="border border-gray-300 rounded p-1 text-sm w-48 h-7" autocomplete="current-password" required>
+
+			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+			<button class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-1 px-4 text-sm" type="submit">Login</button>
+		</form>
+	</div>
+{% endif %}
